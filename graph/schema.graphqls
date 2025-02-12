@@ -1,0 +1,55 @@
+directive @goField(forceResolver: Boolean) on FIELD_DEFINITION
+
+scalar Time
+
+type User {
+    id: ID!
+    username: String!
+}
+
+type Comment {
+    id: ID!
+    payload: String!
+    postID: ID!
+    author: User!
+    replyTo: ID
+    replies(limit: Int = 10, offset: Int = 0): [Comment!] @goField(forceResolver: true)
+    createdAt: Time!
+}
+
+type Post {
+    id: ID!
+    title: String!
+    payload: String!
+    author: User!
+    isCommentsAllowed: Boolean!
+    comments(limit: Int = 10, offset: Int = 0): [Comment!] @goField(forceResolver: true)
+    createdAt: Time!
+}
+
+input NewPost {
+    title: String!
+    payload: String!
+    authorID: ID!
+    IsCommentsAllowed: Boolean!
+}
+
+input NewComment {
+    payload: String!
+    postID: ID!
+    authorID: ID!
+    replyTo: ID
+}
+
+type Query {
+    GetPostByID(id: ID!): Post!
+    GetAllPosts(limit: Int = 10, offset: Int = 0): [Post!]!
+}
+type Mutation {
+    CreatePost(input: NewPost!): Post!
+    CreateComment(input: NewComment!): Comment!
+}
+
+type Subscription {
+    CommentsSubscription(postID: ID!):Comment!
+}

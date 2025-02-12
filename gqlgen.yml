@@ -1,0 +1,30 @@
+schema:
+  - graph/*.graphqls
+
+exec:
+  filename: graph/generated.go
+  package: graph
+
+model:
+  filename: internal/models/models_gen.go
+  package: models
+
+resolver:
+  layout: follow-schema
+  dir: internal/resolvers
+  package: graphql
+  filename_template: "{name}-impl.go"
+
+models:
+  ID:
+    model:
+      - github.com/99designs/gqlgen/graphql.IntID
+      - github.com/99designs/gqlgen/graphql.ID
+      - github.com/99designs/gqlgen/graphql.UintID
+  Int:
+    model:
+      - github.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64
+      - github.com/99designs/gqlgen/graphql.Int32
+  Time:
+    model: github.com/99designs/gqlgen/graphql.Time
